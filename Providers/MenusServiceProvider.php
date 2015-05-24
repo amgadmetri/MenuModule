@@ -20,12 +20,7 @@ class MenusServiceProvider extends ServiceProvider
 		// services in the IoC container. If you wish, you may make additional
 		// methods or service providers to keep the code more focused and granular.
 		App::register('App\Modules\Menus\Providers\RouteServiceProvider');
-
-		//Bind GalleryRepository Facade to the IoC Container
-		App::bind('MenuRepository', function()
-		{
-			return new App\Modules\Menus\Repositories\MenuRepository;
-		});
+		
 		$this->registerNamespaces();
 	}
 

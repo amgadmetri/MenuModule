@@ -15,30 +15,31 @@ class CreateMenuItemsTable extends Migration
 		if ( ! Schema::hasTable('menu_items'))
 		{
 			Schema::create('menu_items', function(Blueprint $table) {
-				$table->increments('id');
-				$table->integer('menu_id');	
-				$table->string('title')->index();
-				$table->string('link')->default('#')->index();
+				$table->bigIncrements('id');
+				$table->bigInteger('menu_id');	
+				$table->string('title', 150)->index();
+				$table->string('link', 150)->default('#')->index();
 				$table->enum('status', ['published', 'unpublished'])->default('published');
-				$table->integer('parent_id');
+				$table->bigInteger('parent_id');
 				$table->enum('target', ['_parent', '_blank', '_top', '_self']);
-				$table->integer('display_order');
-				$table->integer('user_id');
+				$table->bigInteger('display_order');
+				$table->bigInteger('user_id');
 				$table->timestamps();
 			});
 
 
-			DB::table('menu_items')->insert([
-				array(
-					'menu_id'       => 1,
-					'title'         => 'Home',
-					'link'          => url('/'),
-					'status'        => 'published',
-					'parent_id'     => 0,
-					'target'        => '_self',
-					'display_order' => 1,
-					'user_id'       => 1,
-					),
+			\CMS::menuItems()->insert(
+				[
+					[
+						'menu_id'       => 1,
+						'title'         => 'Home',
+						'link'          => url('/'),
+						'status'        => 'published',
+						'parent_id'     => 0,
+						'target'        => '_self',
+						'display_order' => 1,
+						'user_id'       => 1,
+					],
 				]
 				);
 		}

@@ -44,14 +44,25 @@
               <td>{{$menu->is_active}}</td>
               <td>{{$menu->description}}</td>
               <td>
-                <a class="btn btn-default" href='{{ url("admin/menus/edit/$menu->id") }}' role="button">Edit</a>
-                <a class="btn btn-default" href='{{ url("admin/menus/delete/$menu->id") }}' role="button">Delete</a>
-                @if($menu->is_active == 0)
-                <a class="btn btn-default" href='{{ url("admin/menus/activate/$menu->id") }}' role="button">Activate</a>
-                @else
-                <a class="btn btn-default active" href='{{ url("admin/menus/deactivate/$menu->id") }}'  role="button">Deactivate</a>
+                @if(\CMS::permissions()->can('edit', 'Menus'))
+                  <a class="btn btn-default" href='{{ url("admin/menus/edit/$menu->id") }}' role="button">Edit</a>
                 @endif
-                <a class="btn btn-default" href='{{ url("admin/menus/menuitem/show/$menu->menu_slug") }}' role="button">Menu items</a>
+
+                @if(\CMS::permissions()->can('delete', 'Menus'))
+                  <a class="btn btn-default" href='{{ url("admin/menus/delete/$menu->id") }}' role="button">Delete</a>
+                @endif
+
+                @if(\CMS::permissions()->can('edit', 'Menus'))
+                  @if($menu->is_active == 0)
+                    <a class="btn btn-default" href='{{ url("admin/menus/activate/$menu->id") }}' role="button">Activate</a>
+                  @else
+                    <a class="btn btn-default active" href='{{ url("admin/menus/deactivate/$menu->id") }}'  role="button">Deactivate</a>
+                  @endif
+                @endif
+
+                @if(\CMS::permissions()->can('show', 'MenuItems'))
+                  <a class="btn btn-default" href='{{ url("admin/menus/menuitem/show/$menu->menu_slug") }}' role="button">Menu items</a>
+                @endif
               </td>
             </tr>
             @endforeach
@@ -59,7 +70,6 @@
         </table>
       </div>
     </div>
-    
   </div>  
 </div>
 @stop

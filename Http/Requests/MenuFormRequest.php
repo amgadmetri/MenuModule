@@ -6,6 +6,16 @@ use Request;
 
 class MenuFormRequest extends FormRequest
 {
+	/**                             
+	 * Determine if the user is authorized to make this request.
+	 *
+	 * @return bool
+	 */
+	public function authorize()
+	{
+		return true;
+	}
+
 	/**
 	 * Get the validation rules that apply to the request.
 	 *
@@ -16,19 +26,7 @@ class MenuFormRequest extends FormRequest
 		return [
 			'title'       => 'required|max:150',
 			'menu_slug'   => 'required|max:150',
-			'description' => 'required|max:150'
-			
-			
+			'description' => 'required|max:255'
 		];
-	}
-
-	/**                             
-	 * Determine if the user is authorized to make this request.
-	 *
-	 * @return bool
-	 */
-	public function authorize()
-	{
-		return true;
 	}
 }

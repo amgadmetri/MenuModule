@@ -1,14 +1,47 @@
 <?php namespace App\Modules\Menus\Repositories;
 
-use App\Modules\Menus\Traits\MenuItemTrait;
-use App\Modules\Menus\Traits\MenuTrait;
-use App\Modules\Menus\Menu;
+use App\AbstractRepositories\AbstractRepository;
 
-class MenuRepository
+class MenuRepository extends AbstractRepository
 {
-	use MenuItemTrait;
-	use MenuTrait;
+	/**
+	 * Return the model full namespace.
+	 * 
+	 * @return string
+	 */
+	protected function getModel()
+	{
+		return 'App\Modules\Menus\Menu';
+	}
+	
+	/**
+	 * Return the module relations.
+	 * 
+	 * @return array
+	 */
+	protected function getRelations()
+	{
+		return ['menuItems'];
+	}
+	
+	/**
+	 * Return menu items belongs to specific
+	 * menu ordered by display_order.
+	 * 
+	 * @param  string $menuSlug
+	 * @return collection
+	 */
+	public function getMenuItems($menuSlug)
+	{
+		return $this->model->where('menu_slug', '=', $menuSlug)->first()->menuItems()->orderBy('display_order')->get();
+	}
 
+	/**
+	 * Return links to all modules specified menu items
+	 * at the module.json file.
+	 * 
+	 * @return array 
+	 */
 	public function getLinks()
 	{
 		$links = array();
@@ -18,14 +51,13 @@ class MenuRepository
 			{
 				foreach ($module['module_parts_menu'] as $menuItem) 
 				{
-					$repository                        = '\\' . ucfirst(str_singular($module['name'])) . 'Repository';
-					$repositoryMethod                  = 'getAll' . $menuItem;
-					$data                              = $repository::$repositoryMethod();
-					$links[$module['name']][$menuItem] = [ 
-					'data'      => $data, 
-					'base_link' => url('/' . strtolower(str_singular($menuItem))),
-					'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
-					'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
+					$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->all();
+					$links[$module['name']][$menuItem] =
+					[ 
+						'data'      => $data, 
+						'base_link' => url('/' . strtolower(str_singular($menuItem))),
+						'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
+						'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
 					];
 				}
 			}
@@ -33,9 +65,16 @@ class MenuRepository
 		return $links;
 	}
 
-	public function getRenderMenu($menuSlug, $parent_id = 0)
+	/**
+	 * Recursive function that build the menu tree.
+	 * 
+	 * @param  string  $menuSlug
+	 * @param  integer $parent_id
+	 * @return string
+	 */
+	public function getMenuTree($menuSlug, $parent_id = 0)
 	{
-		$menuItems = $this->getAllMenuItems($menuSlug);
+		$menuItems = $this->getMenuItems($menuSlug);
 		$html      = '';
 		foreach ($menuItems as $menuItem) 
 		{
@@ -52,9 +91,50 @@ class MenuRepository
 		return $html;
 	}
 
-
-	public function getDisplayMenu($menuSlug)
+	/**
+	 * Return the menu with the matched menu slug.
+	 * 
+	 * @param  string $menuSlug
+	 * @return string
+	 */
+	public function renderMenu($menuSlug)
 	{
 		return view('menus::parts.menutemplate', ['menuSlug' => $menuSlug])->render();
+	}
+
+	/**
+	 * Change the active of specific menu to
+	 * true.
+	 * 
+	 * @param  integer $id
+	 * @return void
+	 */
+	public function activateMenu($id)
+	{
+		$this->update($id, ['is_active' => 1]);
+	}
+
+	/**
+	 * Change the active of specific menu to
+	 * false.
+	 * 
+	 * @param  integer $id
+	 * @return void
+	 */
+	public function deactivateMenu($id)
+	{
+		$this->update($id, ['is_active' => 0]);
+	}
+
+	/**
+	 * Check if the menu with the given menu slug
+	 * is active or not.
+	 * 
+	 * @param  string $menuSlug
+	 * @return boolean
+	 */
+	public function checkMenu($menuSlug)
+	{	
+		return $this->model->where('menu_slug', '=', $menuSlug)->first()->is_active;
 	}
 }

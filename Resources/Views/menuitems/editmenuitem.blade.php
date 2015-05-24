@@ -61,9 +61,9 @@
                 class            ="form-control" 
                 name             ="link"
                 @if ($menuitem->link ==='#')
-                value            ="{{''}}" 
+                 value           ="{{''}}" 
                 @else
-                value            ="{{ $menuitem->link }}"
+                 value           ="{{ $menuitem->link }}"
                 @endif  
                 placeholder      ="Add Link here or choos from below .." 
                 aria-describedby ="sizing-addon2"
@@ -105,7 +105,7 @@
           <div class="form-group">
             <label for="target">Target:</label>
             <select name="target" class="form-control">
-              <option  @if($menuitem->target === "_parent") selected @endif  value="_parent">_parent</option>
+              <option @if($menuitem->target === "_parent") selected @endif  value="_parent">_parent</option>
               <option @if($menuitem->target === "_blank") selected @endif  value="_blank">_blank</option>
               <option @if($menuitem->target === "_top") selected @endif value="_top">_top</option>
               <option @if($menuitem->target === "_self") selected @endif value="_self">_self</option>

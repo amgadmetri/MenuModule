@@ -1,90 +1,138 @@
 <?php namespace App\Modules\Menus\Http\Controllers;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\BaseController;
 use App\Modules\Menus\Http\Requests\MenuItemFormRequest;
-use App\Modules\Menus\Repositories\MenuRepository;
 
-class MenuItemController extends Controller {
+class MenuItemController extends BaseController {
 
-	private $menu;
-	protected $permissions=['getPublish' => 'edit', 'getUnpublish' => 'edit', 'getShow' => 'show'];
+	/**
+	 * Specify a list of extra permissions.
+	 * 
+	 * @var permissions
+	 */
+	protected $permissions = [
+	'getPublish'   => 'edit', 
+	'getUnpublish' => 'edit' , 
+	'getShow'      => 'show'
+	];
 
-	public function __construct(MenuRepository $menu)
+	/**
+	 * Create new MenuItemController instance.
+	 */
+	public function __construct()
 	{
-		$this->menu = $menu;
+		parent::__construct('MenuItems');
 	}
 
-	public function getShow($menu_slug)
+	/**
+ 	 * Display a listing of the menu items.
+ 	 * 
+ 	 * @param  string $menuSlug
+ 	 * @return response
+ 	 */
+	public function getShow($menuSlug)
 	{	
-		$menus     = $this->menu->getAllMenus();
-		$menuItems = $this->menu->getAllMenuItems($menu_slug);
+		$menus     = \CMS::menuItems()->all();
+		$menuItems = \CMS::menus()->getMenuItems($menuSlug);
 
-		return view('menus::menuitems.menuitems', compact('menuItems', 'menu_slug'));
+		return view('menus::menuitems.menuitems', compact('menuItems', 'menuSlug'));
 	}
 
-	public function getCreate($menu_slug)
+	/**
+	 * Show the form for creating a new menu item.
+	 * 
+ 	 * @param  string $menuSlug
+	 * @return Response
+	 */
+	public function getCreate($menuSlug)
 	{
-		$links     = $this->menu->getLinks();
-		$menus     = $this->menu->getAllMenus();
-		$menuItems = $this->menu->getAllMenuItems($menu_slug);
+		$links     = \CMS::menu()->getLinks();
+		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
+		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
+
 		return view('menus::menuitems.createmenuitems', compact('menus', 'menuItems', 'links'));
 	}
 
+	/**
+	 * Store a newly created menu item in menu item.
+	 * 
+	 * @param  MenuItemFormRequest  $request
+	 * @return Response
+	 */
 	public function postCreate(MenuItemFormRequest $request)
 	{
 		$data['user_id'] = \Auth::user()->id;
-		if ($request->link == "") 
-		{
-			$data['link'] = "#";
-			$this->menu->createMenuItem(array_merge($request->except('user_id', 'link'), $data));
-			return redirect()->back()->
-			with('message', 'Menu successfully created');
-		}
-		
-		$this->menu->createMenuItem(array_merge($request->except('user_id'), $data));
-		return redirect()->back()->
-		with('message', 'Menu successfully created');
+		$data['link']    = strlen(trim($request->link)) ?: "#";		
+		\CMS::menuItems()->create(array_merge($request->except('user_id', 'link'), $data));
+
+		return redirect()->back()->with('message', 'Menu Item successfully created');
 	}
 
-	public function getEdit($id, $menu_slug)
+	/**
+	 * Show the form for editing the specified menu item.
+	 * 
+	 * @param  integer $id
+ 	 * @param  string  $menuSlug
+	 * @return Response
+	 */
+	public function getEdit($id, $menuSlug)
 	{
-		$links     = $this->menu->getLinks();
-		$menuitem  = $this->menu->getMenuItem($id);
-		$menus     = $this->menu->getAllMenus();
-		$menuItems = $this->menu->getAllMenuItems($menu_slug);
+		$links     = \CMS::menu()->getLinks();
+		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
+		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
+		$menuitem  = \CMS::menuItems()->find($id);
 
 		return view('menus::menuitems.editmenuitem', compact('menuitem', 'menus', 'menuItems', 'links'));
 	}
 
+	/**
+	 * Update the specified menu item in storage.
+	 * 
+	 * @param  integer              $id
+	 * @param  MenuItemFormRequest  $request
+	 * @return Response
+	 */
 	public function postEdit(MenuItemFormRequest $request, $id)
 	{
-		if ($request->link == "") 
-		{
-			$data['link'] = "#";
-			$this->menu->updateMenuItem($id, array_merge($request->except('user_id', 'link'), $data));
-			return redirect('admin/menus')->
-			with('message', 'Menu successfully updated');
-		}
-		$this->menu->updateMenuItem($id, array_merge($request->all()));
-		return redirect('admin/menus')->
-		with('message', 'Menu successfully updated');
+		$data['link']    = strlen(trim($request->link)) ?: "#";		
+		\CMS::menuItems()->update($id, array_merge($request->except('link'), $data));
+
+		return redirect()->back()->with('message', 'Menu Item successfully updated');
 	}
 	
+	/**
+	 * Remove the specified menu item from storage.
+	 * 
+	 * @param  integer  $id
+	 * @return Response
+	 */
 	public function getDelete($id)
 	{
-		$this->menu->deleteMenuItem($id);
-		return redirect()->back()->with('message', 'Menu Deleted succssefully');
+		\CMS::menuItems()->delete($id);
+		return redirect()->back()->with('message', 'Menu Item Deleted succssefully');
 	}
 
+	/**
+	 * Publish specified menu item.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
 	public function getPublish($id)
 	{
-		$this->menu->publishMenuItem($id);
+		\CMS::menuItems()->publishMenuItem($id);
 		return redirect()->back();
 	}
 
+	/**
+	 * Unpublish specified menu item.
+	 * 
+	 * @param  integer $id
+	 * @return response
+	 */
 	public function getUnpublish($id)
 	{
-		$this->menu->unpublishMenuItem($id);
+		\CMS::menuItems()->unpublishMenuItem($id);
 		return redirect()->back();
 	}
 	
