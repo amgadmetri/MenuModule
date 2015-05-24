@@ -108,6 +108,29 @@
               >
             </div>
 
+            <div class="form-group">
+            <label for="css_class">CSS Class:</label>
+              <input 
+              type             ="text" 
+              class            ="form-control" 
+              name             ="css_class" 
+              value            ="{{ old('css_class') }}" 
+              placeholder      ="Add css_class here .." 
+              aria-describedby ="sizing-addon2"
+              >
+            </div>
+            <div class="form-group">
+              <label for="css_attributes">CSS Attribute:</label>
+              <input 
+              type             ="text" 
+              class            ="form-control" 
+              name             ="css_attributes" 
+              value            ="{{ old('css_attributes') }}" 
+              placeholder      ="Add css_attributes here .." 
+              aria-describedby ="sizing-addon2"
+              >
+            </div>
+
             <button type="submit" class="btn btn-default">Add Menu Items</button>
           </form>
         </div>

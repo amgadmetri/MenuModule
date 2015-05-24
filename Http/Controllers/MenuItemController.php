@@ -94,6 +94,7 @@ class MenuItemController extends BaseController {
 	 */
 	public function postEdit(MenuItemFormRequest $request, $id)
 	{
+		dd($request->link);
 		$data['link']    = strlen(trim($request->link)) ?: "#";		
 		\CMS::menuItems()->update($id, array_merge($request->except('link'), $data));
 

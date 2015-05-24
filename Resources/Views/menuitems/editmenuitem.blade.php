@@ -61,9 +61,9 @@
                 class            ="form-control" 
                 name             ="link"
                 @if ($menuitem->link ==='#')
-                 value           ="{{''}}" 
+                value           ="{{''}}" 
                 @else
-                 value           ="{{ $menuitem->link }}"
+                value           ="{{ $menuitem->link }}"
                 @endif  
                 placeholder      ="Add Link here or choos from below .." 
                 aria-describedby ="sizing-addon2"
@@ -120,6 +120,30 @@
             name             ="display_order" 
             value            ="{{ $menuitem->display_order }}" 
             placeholder      ="Add display_order here .." 
+            aria-describedby ="sizing-addon2"
+            >
+          </div>
+
+          <div class="form-group">
+          <label for="css_class">CSS class:</label>
+            <input 
+            type             ="text" 
+            class            ="form-control" 
+            name             ="css_class" 
+            value            ="{{ $menuitem->css_class }}" 
+            placeholder      ="Add css class here .." 
+            aria-describedby ="sizing-addon2"
+            >
+          </div>
+
+          <div class="form-group">
+          <label for="css_attributes">CSS attributes:</label>
+            <input 
+            type             ="text" 
+            class            ="form-control" 
+            name             ="css_attributes" 
+            value            ="{{ $menuitem->css_attributes }}" 
+            placeholder      ="Add css attributes here .." 
             aria-describedby ="sizing-addon2"
             >
           </div>

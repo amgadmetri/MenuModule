@@ -23,6 +23,8 @@ class CreateMenuItemsTable extends Migration
 				$table->bigInteger('parent_id');
 				$table->enum('target', ['_parent', '_blank', '_top', '_self']);
 				$table->bigInteger('display_order');
+				$table->string('css_class', 150);
+				$table->string('css_attributes', 150);
 				$table->bigInteger('user_id');
 				$table->timestamps();
 			});
@@ -38,6 +40,8 @@ class CreateMenuItemsTable extends Migration
 						'parent_id'     => 0,
 						'target'        => '_self',
 						'display_order' => 1,
+						'css_class'     => '',
+						'css_attributes' => '',
 						'user_id'       => 1,
 					],
 				]
