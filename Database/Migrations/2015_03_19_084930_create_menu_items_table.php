@@ -16,36 +16,19 @@ class CreateMenuItemsTable extends Migration
 		{
 			Schema::create('menu_items', function(Blueprint $table) {
 				$table->bigIncrements('id');
-				$table->bigInteger('menu_id');	
+				$table->bigInteger('menu_id')->unsigned();	
 				$table->string('title', 150)->index();
 				$table->string('link', 150)->default('#')->index();
 				$table->enum('status', ['published', 'unpublished'])->default('published');
-				$table->bigInteger('parent_id');
+				$table->bigInteger('parent_id')->unsigned();
 				$table->enum('target', ['_parent', '_blank', '_top', '_self']);
-				$table->bigInteger('display_order');
 				$table->string('css_class', 150);
 				$table->string('css_attributes', 150);
-				$table->bigInteger('user_id');
+				$table->bigInteger('display_order')->unsigned();
+				$table->bigInteger('user_id')->unsigned();
+				$table->foreign('user_id')->references('id')->on('users');
 				$table->timestamps();
 			});
-
-
-			\CMS::menuItems()->insert(
-				[
-					[
-						'menu_id'       => 1,
-						'title'         => 'Home',
-						'link'          => url('/'),
-						'status'        => 'published',
-						'parent_id'     => 0,
-						'target'        => '_self',
-						'display_order' => 1,
-						'css_class'     => '',
-						'css_attributes' => '',
-						'user_id'       => 1,
-					],
-				]
-				);
 		}
 	}
 

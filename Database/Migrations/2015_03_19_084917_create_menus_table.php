@@ -22,17 +22,6 @@ class CreateMenusTable extends Migration
 				$table->boolean('is_active')->default(1);
 				$table->timestamps();
 			});
-
-			\CMS::menus()->insert(
-				[
-					[
-						'title'       => 'Main Menu',
-						'menu_slug'   => 'mainmenu',
-						'description' => 'contain the main menus for the header',
-						'is_active'   => 1,
-					],
-				]
-				);
 		}
 	}
 
