@@ -54,10 +54,10 @@ class MenuRepository extends AbstractRepository
 					$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->all();
 					$links[$module['name']][$menuItem] =
 					[ 
-						'data'      => $data, 
-						'base_link' => url('/' . strtolower(str_singular($menuItem))),
-						'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
-						'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
+					'data'      => $data, 
+					'base_link' => url('/' . strtolower(str_singular($menuItem))),
+					'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
+					'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
 					];
 				}
 			}
@@ -99,7 +99,20 @@ class MenuRepository extends AbstractRepository
 	 */
 	public function renderMenu($menuSlug)
 	{
-		dd(\CMS::CoreModules()->getActiveTheme()->module_name);
+		$themename = \CMS::CoreModules()->getActiveTheme()->module_key ;
+		$filetocheck=$themename . "::parts".".defaultmenu".".menutemplate";
+		// dd($filetocheck);
+		if (view()->exists($filetocheck))
+		{
+			dd("exsits");
+		}
+		else
+			{
+				dd("not exsits");
+				dd(view('menus::parts.menutemplate'));
+				
+			}
+		
 		return view('menus::parts.menutemplate', ['menuSlug' => $menuSlug])->render();
 	}
 
