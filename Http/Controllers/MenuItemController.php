@@ -62,7 +62,7 @@ class MenuItemController extends BaseController {
 	public function postCreate(MenuItemFormRequest $request)
 	{
 		$data['user_id'] = \Auth::user()->id;
-		$data['link']    = strlen(trim($request->link)) ?: "#";		
+		$data['link']    = strlen(trim($request->link)) ? $request->link : "#";
 		\CMS::menuItems()->create(array_merge($request->except('user_id', 'link'), $data));
 
 		return redirect()->back()->with('message', 'Menu Item successfully created');
@@ -94,8 +94,7 @@ class MenuItemController extends BaseController {
 	 */
 	public function postEdit(MenuItemFormRequest $request, $id)
 	{
-		dd($request->link);
-		$data['link']    = strlen(trim($request->link)) ?: "#";		
+		$data['link']    = strlen(trim($request->link)) ? $request->link : "#";		
 		\CMS::menuItems()->update($id, array_merge($request->except('link'), $data));
 
 		return redirect()->back()->with('message', 'Menu Item successfully updated');

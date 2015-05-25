@@ -99,6 +99,7 @@ class MenuRepository extends AbstractRepository
 	 */
 	public function renderMenu($menuSlug)
 	{
+		dd(\CMS::CoreModules()->getActiveTheme()->module_name);
 		return view('menus::parts.menutemplate', ['menuSlug' => $menuSlug])->render();
 	}
 

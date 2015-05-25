@@ -22,6 +22,8 @@ class CreateMenusTable extends Migration
 				$table->boolean('is_active')->default(1);
 				$table->timestamps();
 			});
+
+			
 		}
 	}
 

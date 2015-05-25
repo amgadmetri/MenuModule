@@ -148,7 +148,7 @@
             >
           </div>
 
-          <input name="user_id" type="hidden" value="0">
+          <input name="user_id" type="hidden" value="{{$menuitem->user_id}}">
           <button type="submit" class="btn btn-default">Update Menu Item</button>
         </form>
       </div>

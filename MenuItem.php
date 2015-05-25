@@ -16,7 +16,7 @@ class MenuItem extends Model {
 	 * 
 	 * @var fillable
 	 */
-	protected $fillable = ['menu_id', 'title', 'link', 'status', 'parent_id', 'target', 'display_order', 'user_id'];
+	protected $fillable = ['menu_id', 'title', 'link', 'status', 'parent_id', 'target', 'display_order', 'user_id', 'css_class', 'css_attributes'];
 	
 	/**
 	 * Get the menuItem menu.
