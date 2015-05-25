@@ -135,6 +135,7 @@ class MenuRepository extends AbstractRepository
 	 */
 	public function checkMenu($menuSlug)
 	{	
-		return $this->model->where('menu_slug', '=', $menuSlug)->first()->is_active;
+		$menu = $this->model->where('menu_slug', '=', $menuSlug)->first();
+		return $menu ? $menu->is_active : false;
 	}
 }

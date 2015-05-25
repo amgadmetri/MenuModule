@@ -32,9 +32,7 @@ class MenuItemController extends BaseController {
  	 */
 	public function getShow($menuSlug)
 	{	
-		$menus     = \CMS::menuItems()->all();
 		$menuItems = \CMS::menus()->getMenuItems($menuSlug);
-
 		return view('menus::menuitems.menuitems', compact('menuItems', 'menuSlug'));
 	}
 
@@ -78,8 +76,8 @@ class MenuItemController extends BaseController {
 	public function getEdit($id, $menuSlug)
 	{
 		$links     = \CMS::menu()->getLinks();
-		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
 		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
+		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
 		$menuitem  = \CMS::menuItems()->find($id);
 
 		return view('menus::menuitems.editmenuitem', compact('menuitem', 'menus', 'menuItems', 'links'));
