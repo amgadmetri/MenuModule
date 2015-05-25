@@ -13,7 +13,7 @@ class MenuItemController extends BaseController {
 	protected $permissions = [
 	'getPublish'   => 'edit', 
 	'getUnpublish' => 'edit' , 
-	'getShow'      => 'show'
+	'getShow'      => 'show',
 	];
 
 	/**
@@ -44,7 +44,7 @@ class MenuItemController extends BaseController {
 	 */
 	public function getCreate($menuSlug)
 	{
-		$links     = \CMS::menu()->getLinks();
+		$links     = \CMS::menu()->getLinks($menuSlug);
 		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
 		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
 
@@ -134,4 +134,28 @@ class MenuItemController extends BaseController {
 		return redirect()->back();
 	}
 	
+	/**
+	 * Handle the pagination request for the
+	 * link data.
+	 * 
+	 * @param  string $menuSlug
+	 * @param  string $partMenuItemName The name of the
+	 *                                  paginated link data.
+	 * @return string
+	 */
+	public function getPaginate($menuSlug, $partMenuItemName)
+	{
+		$links = \CMS::menu()->getLinks($menuSlug);
+		foreach ($links as $key => $value) 
+		{	
+			/**
+			 * Return only the data related to the spicfied
+			 * part menu item name
+			 */
+			if (array_key_exists($partMenuItemName, $value)) 
+			{
+				return view('menus::parts.linkdata', ['modulePartMenuItem' => $value[$partMenuItemName]])->render();
+			}
+		}
+	}
 }

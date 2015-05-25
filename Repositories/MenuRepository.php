@@ -42,7 +42,7 @@ class MenuRepository extends AbstractRepository
 	 * 
 	 * @return array 
 	 */
-	public function getLinks()
+	public function getLinks($menuSlug)
 	{
 		$links = array();
 		foreach (\Module::all() as $module) 
@@ -64,7 +64,8 @@ class MenuRepository extends AbstractRepository
 						{
 							if (method_exists(\CMS::$baseType(), 'getAll'))
 							{
-								$data                                      = ! \CMS::$baseType() ? [] : \CMS::$baseType()->getAll($value->link_name);
+								$data                                      = ! \CMS::$baseType() ? [] : \CMS::$baseType()->getAll($value->link_name, 1);
+								$data->setPath(url('admin/menus/menuitem/paginate', [$menuSlug, $value->link_name]));
 								$links[$module['name']][$value->link_name] =
 								[
 								'data'      => $data, 
@@ -77,7 +78,8 @@ class MenuRepository extends AbstractRepository
 					}
 					else
 					{
-						$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->all();
+						$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->paginate(1);
+						$data->setPath(url('admin/menus/menuitem/paginate', [$menuSlug, $menuItem]));
 						$links[$module['name']][$menuItem] =
 						[
 						'data'      => $data, 
