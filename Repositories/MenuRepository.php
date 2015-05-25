@@ -51,14 +51,41 @@ class MenuRepository extends AbstractRepository
 			{
 				foreach ($module['module_parts_menu'] as $menuItem) 
 				{
-					$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->all();
-					$links[$module['name']][$menuItem] =
-					[ 
-					'data'      => $data, 
-					'base_link' => url('/' . strtolower(str_singular($menuItem))),
-					'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
-					'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
-					];
+					/**
+					 * If array then it is a base type.
+					 * Get all sub types and generate
+					 * links for them.
+					 */
+					if (is_array($menuItem)) 
+					{
+						$baseType = key($menuItem);
+						$data     = ! \CMS::$baseType() ? [] : \CMS::$baseType()->all();
+						foreach ($data as $key => $value)
+						{
+							if (method_exists(\CMS::$baseType(), 'getAll'))
+							{
+								$data                                      = ! \CMS::$baseType() ? [] : \CMS::$baseType()->getAll($value->link_name);
+								$links[$module['name']][$value->link_name] =
+								[
+								'data'      => $data, 
+								'base_link' => url('/' . strtolower(str_singular($value->link_name))),
+								'all_link'  => url('/' . strtolower(str_singular($value->link_name)) . 's'),
+								'add_link'  => url('/add' . strtolower(str_singular($value->link_name)))
+								];
+							}
+						}
+					}
+					else
+					{
+						$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->all();
+						$links[$module['name']][$menuItem] =
+						[
+						'data'      => $data, 
+						'base_link' => url('/' . strtolower(str_singular($menuItem))),
+						'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
+						'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
+						];
+					}
 				}
 			}
 		}
