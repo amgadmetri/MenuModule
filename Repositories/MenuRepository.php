@@ -103,7 +103,7 @@ class MenuRepository extends AbstractRepository
 	 */
 	public function getMenuTree($menuSlug, $path, $parent_id = 0)
 	{
-		$path = str_replace('menutemplate', 'menu', $path);
+		$path      = $path . '.menu';
 		$menuItems = $this->getMenuItems($menuSlug);
 		$html      = '';
 		foreach ($menuItems as $menuItem) 
@@ -123,29 +123,35 @@ class MenuRepository extends AbstractRepository
 
 	/**
 	 * Return the menu with the matched menu slug.
+	 * Take the path of the template and check if
+	 * not exists then construct default directory
+	 * if not exists then use the default template.
 	 * 
 	 * @param  string $menuSlug
+	 * @param  string $path
 	 * @return string
 	 */
-	public function renderMenu($menuSlug, $path)
+	public function renderMenu($menuSlug, $path = false)
 	{
 		$themename    = \CMS::CoreModules()->getActiveTheme()->module_key ;
-		$fullpath     = $themename . "::". $path;
-		$templatename = $themename . "::templates.menutemplates.".$path.".menutemplate";
+		$fullpath     = $themename . "::" . $path;
+		$templatename = $themename . "::templates.menutemplates." . $path . ".menutemplate";
 		$defaultPath  = 'menus::parts.menutemplate';
+
 		if (view()->exists($fullpath))
 		{
-			return view($fullpath, ['menuSlug' => $menuSlug, 'path' => $fullpath])->render();
+			$path = substr($fullpath, 0, strripos($fullpath, "."));
+			return view($fullpath, ['menuSlug' => $menuSlug, 'path' => $path])->render();
 		}
 		elseif (view()->exists($templatename)) 
 		{
-			// dd($templatename);
-			return view($templatename, ['menuSlug' => $menuSlug, 'path' => $templatename])->render();
+			$path = substr($templatename, 0, strripos($templatename, "."));
+			return view($templatename, ['menuSlug' => $menuSlug, 'path' => $path])->render();
 		}
 		else
 		{
-			dd('default');
-			return view($defaultPath, ['menuSlug' => $menuSlug, 'path' => $defaultPath])->render();
+			$path = substr($defaultPath, 0, strripos($defaultPath, "."));
+			return view($defaultPath, ['menuSlug' => $menuSlug, 'path' => $path])->render();
 		}
 	}
 

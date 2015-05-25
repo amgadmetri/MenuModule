@@ -26,7 +26,7 @@
     <div class="container">
       <div class="col-sm-9">
         
-        {!! \CMS::menus()->renderMenu($menuSlug, 'headermenu') !!}
+        {!! \CMS::menus()->renderMenu($menuSlug) !!}
 
         <a class="btn btn-default" href='{{ url("admin/menus/menuitem/create", $menuSlug) }}' role="button">Add new menu items</a>
         <table class="table table-striped">
