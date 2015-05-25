@@ -3,7 +3,7 @@
 		<div class='container-fluid'>
 			<div class='collapse navbar-collapse navbar-menubuilder'>
 				<ul class='nav navbar-nav navbar-left'>
-					{!! \CMS::menus()->getMenuTree($menuSlug) !!}
+					{!! \CMS::menus()->getMenuTree($menuSlug, $path) !!}
 				</ul> 
 			</div>
 		</div>

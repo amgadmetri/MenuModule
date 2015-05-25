@@ -12,7 +12,7 @@
 	</a>
 	@if($menuItem->childes()->count() > 0)
 		<ul class='dropdown-menu'>
-			{!! \CMS::menus()->getMenuTree('mainmenu', $menuItem->id) !!}
+			{!! \CMS::menus()->getMenuTree('mainmenu', $path, $menuItem->id) !!}
 		</ul>
 	@endif
 </li>

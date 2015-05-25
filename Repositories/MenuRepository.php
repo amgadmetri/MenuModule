@@ -99,8 +99,9 @@ class MenuRepository extends AbstractRepository
 	 * @param  integer $parent_id
 	 * @return string
 	 */
-	public function getMenuTree($menuSlug, $parent_id = 0)
+	public function getMenuTree($menuSlug, $path, $parent_id = 0)
 	{
+		$path = str_replace('menutemplate', 'menu', $path);
 		$menuItems = $this->getMenuItems($menuSlug);
 		$html      = '';
 		foreach ($menuItems as $menuItem) 
@@ -109,7 +110,7 @@ class MenuRepository extends AbstractRepository
 			{
 				if ($menuItem->status == 'published') 
 				{
-					$html .= view('menus::parts.menu', compact('menuItem'))->render();
+					$html .= view($path, compact('menuItem', 'path'))->render();
 				}
 
 			}
@@ -124,23 +125,26 @@ class MenuRepository extends AbstractRepository
 	 * @param  string $menuSlug
 	 * @return string
 	 */
-	public function renderMenu($menuSlug)
+	public function renderMenu($menuSlug, $path)
 	{
-		$themename = \CMS::CoreModules()->getActiveTheme()->module_key ;
-		$filetocheck=$themename . "::parts".".defaultmenu".".menutemplate";
-		// dd($filetocheck);
-		if (view()->exists($filetocheck))
+		$themename    = \CMS::CoreModules()->getActiveTheme()->module_key ;
+		$fullpath     = $themename . "::". $path;
+		$templatename = $themename . "::templates.menutemplates.".$path.".menutemplate";
+		$defaultPath  = 'menus::parts.menutemplate';
+		if (view()->exists($fullpath))
 		{
-			dd("exsits");
+			return view($fullpath, ['menuSlug' => $menuSlug, 'path' => $fullpath])->render();
+		}
+		elseif (view()->exists($templatename)) 
+		{
+			// dd($templatename);
+			return view($templatename, ['menuSlug' => $menuSlug, 'path' => $templatename])->render();
 		}
 		else
-			{
-				dd("not exsits");
-				dd(view('menus::parts.menutemplate'));
-				
-			}
-		
-		return view('menus::parts.menutemplate', ['menuSlug' => $menuSlug])->render();
+		{
+			dd('default');
+			return view($defaultPath, ['menuSlug' => $menuSlug, 'path' => $defaultPath])->render();
+		}
 	}
 
 	/**
