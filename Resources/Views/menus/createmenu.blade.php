@@ -42,13 +42,13 @@
               >
             </div>
             <div class="form-group">
-              <label for="menu_slug">Menu:</label>
+              <label for="menu_slug">Menu Slug:</label>
               <input 
               type="text" 
               class="form-control" 
               name="menu_slug" 
               value="{{ old('menu_slug') }}" 
-              placeholder="Add menu here .." 
+              placeholder="Add menu slug here .." 
               aria-describedby="sizing-addon2"
               >
             </div>

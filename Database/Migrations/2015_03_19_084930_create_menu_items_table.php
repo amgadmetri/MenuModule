@@ -18,7 +18,6 @@ class CreateMenuItemsTable extends Migration
 				$table->bigIncrements('id');
 				$table->bigInteger('menu_id')->unsigned();
 				$table->foreign('menu_id')->references('id')->on('menus');
-				$table->string('title', 150)->index();
 				$table->string('link', 150)->default('#')->index();
 				$table->enum('status', ['published', 'unpublished'])->default('published');
 				$table->bigInteger('parent_id')->unsigned();

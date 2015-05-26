@@ -32,7 +32,7 @@ class MenuItemController extends BaseController {
  	 */
 	public function getShow($menuSlug)
 	{	
-		$menuItems = \CMS::menus()->getMenuItems($menuSlug);
+		$menuItems = \CMS::menus()->getMenuItems($menuSlug, 'en');
 		return view('menus::menuitems.menuitems', compact('menuItems', 'menuSlug'));
 	}
 
@@ -45,7 +45,7 @@ class MenuItemController extends BaseController {
 	public function getCreate($menuSlug)
 	{
 		$links     = \CMS::menu()->getLinks($menuSlug);
-		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
+		$menuItems = \CMS::menu()->getMenuItems($menuSlug, 'en');
 		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
 
 		return view('menus::menuitems.createmenuitems', compact('menus', 'menuItems', 'links'));
@@ -61,7 +61,7 @@ class MenuItemController extends BaseController {
 	{
 		$data['user_id'] = \Auth::user()->id;
 		$data['link']    = strlen(trim($request->link)) ? $request->link : "#";
-		\CMS::menuItems()->create(array_merge($request->except('user_id', 'link'), $data));
+		\CMS::menuItems()->createMenuItem(array_merge($request->except('user_id', 'link'), $data));
 
 		return redirect()->back()->with('message', 'Menu Item successfully created');
 	}

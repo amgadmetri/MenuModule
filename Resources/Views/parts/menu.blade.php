@@ -5,14 +5,14 @@
 	@endif
 	 href='{{ url($menuItem->link) }}'
 	 >
-		{{ $menuItem->title }}
+		{!! $menuItem->data['title'] !!}
 		@if($menuItem->childes()->count() > 0)
 			<b class="caret"></b>
 		@endif
 	</a>
 	@if($menuItem->childes()->count() > 0)
 		<ul class='dropdown-menu'>
-			{!! \CMS::menus()->getMenuTree('mainmenu', $path, $menuItem->id) !!}
+			{!! \CMS::menus()->getMenuTree('mainmenu', $path, $language, $menuItem->id) !!}
 		</ul>
 	@endif
 </li>

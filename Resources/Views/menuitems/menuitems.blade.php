@@ -26,7 +26,7 @@
     <div class="container">
       <div class="col-sm-9">
         
-        {!! \CMS::menus()->renderMenu($menuSlug) !!}
+        {!! \CMS::menus()->renderMenu($menuSlug, 'en') !!}
 
         <a class="btn btn-default" href='{{ url("admin/menus/menuitem/create", $menuSlug) }}' role="button">Add new menu items</a>
         <table class="table table-striped">
@@ -43,7 +43,7 @@
            @foreach ($menuItems as $menuItem)
              <tr>
               <th scope="row">{{ $menuItem->id }}</th>
-              <td>{{ $menuItem->title }}</td>
+              <td>{!! $menuItem->data['title'] !!}</td>
               <td>{{ $menuItem->status }}</td>
               <td>{{ $menuItem->menu->title}}</td>
               <td>
@@ -61,6 +61,15 @@
                   @else
                     <a class="btn btn-default active" href='{{ url("admin/menus/menuitem/unpublish/$menuItem->id") }}' role="button">Unpublish</a>
                   @endif
+                @endif
+
+                @if(\CMS::permissions()->can('show', 'LanguageContents'))
+                  <a 
+                  class ="btn btn-default" 
+                  href  ='{{ url("admin/language/languagecontents/show/menu/$menuItem->id") }}'
+                  role  ="button">
+                  Translations
+                  </a> 
                 @endif
               </td>
             </tr>

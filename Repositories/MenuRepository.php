@@ -31,9 +31,14 @@ class MenuRepository extends AbstractRepository
 	 * @param  string $menuSlug
 	 * @return collection
 	 */
-	public function getMenuItems($menuSlug)
+	public function getMenuItems($menuSlug, $language = false)
 	{
-		return $this->model->where('menu_slug', '=', $menuSlug)->first()->menuItems()->orderBy('display_order')->get();
+		$menuItems =  $this->model->where('menu_slug', '=', $menuSlug)->first()->menuItems()->orderBy('display_order')->get();
+		foreach ($menuItems as $menuItem) 
+		{
+			$menuItem->data = \CMS::languageContents()->getTranslations($menuItem->id, 'menu', $language);
+		}
+		return $menuItems;
 	}
 
 	/**
@@ -101,10 +106,10 @@ class MenuRepository extends AbstractRepository
 	 * @param  integer $parent_id
 	 * @return string
 	 */
-	public function getMenuTree($menuSlug, $path, $parent_id = 0)
+	public function getMenuTree($menuSlug, $path, $language, $parent_id = 0)
 	{
 		$path      = $path . '.menu';
-		$menuItems = $this->getMenuItems($menuSlug);
+		$menuItems = $this->getMenuItems($menuSlug, $language);
 		$html      = '';
 		foreach ($menuItems as $menuItem) 
 		{
@@ -112,7 +117,7 @@ class MenuRepository extends AbstractRepository
 			{
 				if ($menuItem->status == 'published') 
 				{
-					$html .= view($path, compact('menuItem', 'path'))->render();
+					$html .= view($path, compact('menuItem', 'path', 'language'))->render();
 				}
 
 			}
@@ -131,7 +136,7 @@ class MenuRepository extends AbstractRepository
 	 * @param  string $path
 	 * @return string
 	 */
-	public function renderMenu($menuSlug, $path = false)
+	public function renderMenu($menuSlug, $language = false, $path = false)
 	{
 		$themename    = \CMS::CoreModules()->getActiveTheme()->module_key ;
 		$fullpath     = $themename . "::" . $path;
@@ -141,17 +146,17 @@ class MenuRepository extends AbstractRepository
 		if (view()->exists($fullpath))
 		{
 			$path = substr($fullpath, 0, strripos($fullpath, "."));
-			return view($fullpath, ['menuSlug' => $menuSlug, 'path' => $path])->render();
+			return view($fullpath, ['menuSlug' => $menuSlug, 'path' => $path, 'language' => $language])->render();
 		}
 		elseif (view()->exists($templatename)) 
 		{
 			$path = substr($templatename, 0, strripos($templatename, "."));
-			return view($templatename, ['menuSlug' => $menuSlug, 'path' => $path])->render();
+			return view($templatename, ['menuSlug' => $menuSlug, 'path' => $path, 'language' => $language])->render();
 		}
 		else
 		{
 			$path = substr($defaultPath, 0, strripos($defaultPath, "."));
-			return view($defaultPath, ['menuSlug' => $menuSlug, 'path' => $path])->render();
+			return view($defaultPath, ['menuSlug' => $menuSlug, 'path' => $path, 'language' => $language])->render();
 		}
 	}
 

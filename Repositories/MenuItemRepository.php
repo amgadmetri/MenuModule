@@ -25,6 +25,34 @@ class MenuItemRepository extends AbstractRepository
 	}
 	
 	/**
+	 * Store the Menu Item and it's translations in to the storage.
+	 * 
+	 * @param  array $data 
+	 * @return object
+	 */
+	public function createMenuItem($data)
+	{	
+		$menuItem = $this->create($data);
+		\CMS::languageContents()->insertLanguageContent(['title' => $data['title']], 'menu', $menuItem->id);
+		
+		return $menuItem;
+	}
+
+	/**
+	 * Store the Menu Item and it's translations in to the storage.
+	 * 
+	 * @param  array $data 
+	 * @return object
+	 */
+	public function updateMenuItem($id, $data)
+	{	
+		$this->update($id, $data);
+		\CMS::languageContents()->insertLanguageContent(['title' => $data['title']], 'menu', $menuItem->id);
+
+		return $this->find($id);
+	}
+
+	/**
 	 * Change the status of specific menu to
 	 * published.
 	 * 
