@@ -32,7 +32,7 @@ class MenuItemController extends BaseController {
  	 */
 	public function getShow($menuSlug)
 	{	
-		$menuItems = \CMS::menus()->getMenuItems($menuSlug, 'all', 'en');
+		$menuItems = \CMS::menus()->getMenuItems($menuSlug, 'all');
 		return view('menus::menuitems.menuitems', compact('menuItems', 'menuSlug'));
 	}
 
