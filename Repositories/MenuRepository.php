@@ -25,18 +25,56 @@ class MenuRepository extends AbstractRepository
 	}
 	
 	/**
+	 * Get all menus based on the given theme.
+	 * If the theme isn't given then get the default
+	 * theme.
+	 * 
+	 * @param  string $theme
+	 * @return collection
+	 */
+	public function getAllMenus($theme = false)
+	{	
+		$theme = $theme ?: \CMS::coreModules()->getActiveTheme()->module_key;
+		return $this->findBy('theme', $theme);
+	}
+
+	/**
 	 * Return menu items belongs to specific
 	 * menu ordered by display_order.
 	 * 
 	 * @param  string $menuSlug
+	 * @param  string $status
+	 * @param  string $language
 	 * @return collection
 	 */
-	public function getMenuItems($menuSlug, $language = false)
+	public function getMenuItems($menuSlug, $status = 'published', $language = false)
 	{
-		$menuItems =  $this->model->where('menu_slug', '=', $menuSlug)->first()->menuItems()->orderBy('display_order')->get();
+		if ($status == 'all') 
+		{
+			$menuItems = $this->first('menu_slug', $menuSlug)->menuItems()->orderBy('display_order')->get();
+		}
+		else
+		{
+			$menuItems = $this->first('menu_slug', $menuSlug)->menuItems()->
+						    	where('status' ,$status)->orderBy('display_order')->get();
+		}
+		return $this->getMenuTranslations($menuItems, $language);
+	}
+
+	/**
+	 * Return the menu items and it's children translated data 
+	 * based on the given language.
+	 * 
+	 * @param  collection $menuItems
+	 * @param  string     $language
+	 * @return collection
+	 */
+	public function getMenuTranslations($menuItems, $language)
+	{
 		foreach ($menuItems as $menuItem) 
 		{
-			$menuItem->data = \CMS::languageContents()->getTranslations($menuItem->id, 'menu', $language);
+			$menuItem->title    = \CMS::languageContents()->getTranslations($menuItem->id, 'menu_item', $language, 'title');
+			$menuItem->children = $this->getMenuTranslations($menuItem->children, $language);
 		}
 		return $menuItems;
 	}
@@ -45,6 +83,7 @@ class MenuRepository extends AbstractRepository
 	 * Return links to all modules specified menu items
 	 * at the module.json file.
 	 * 
+	 * @param  string $menuSlug
 	 * @return array 
 	 */
 	public function getLinks($menuSlug)
@@ -100,64 +139,34 @@ class MenuRepository extends AbstractRepository
 	}
 
 	/**
-	 * Recursive function that build the menu tree.
-	 * 
-	 * @param  string  $menuSlug
-	 * @param  integer $parent_id
-	 * @return string
-	 */
-	public function getMenuTree($menuSlug, $path, $language, $parent_id = 0)
-	{
-		$path      = $path . '.menu';
-		$menuItems = $this->getMenuItems($menuSlug, $language);
-		$html      = '';
-		foreach ($menuItems as $menuItem) 
-		{
-			if ($menuItem->parent_id == $parent_id) 
-			{
-				if ($menuItem->status == 'published') 
-				{
-					$html .= view($path, compact('menuItem', 'path', 'language'))->render();
-				}
-
-			}
-
-		}
-		return $html;
-	}
-
-	/**
-	 * Return the menu with the matched menu slug.
-	 * Take the path of the template and check if
-	 * not exists then construct default directory
-	 * if not exists then use the default template.
+	 * Return the menu based on the given menu type 
+	 * and language.
 	 * 
 	 * @param  string $menuSlug
+	 * @param  string $language
 	 * @param  string $path
 	 * @return string
 	 */
 	public function renderMenu($menuSlug, $language = false, $path = false)
 	{
-		$themename    = \CMS::CoreModules()->getActiveTheme()->module_key ;
-		$fullpath     = $themename . "::" . $path;
-		$templatename = $themename . "::templates.menutemplates." . $path . ".menutemplate";
-		$defaultPath  = 'menus::parts.menutemplate';
-
-		if (view()->exists($fullpath))
+		if ($this->checkMenu($menuSlug))
 		{
-			$path = substr($fullpath, 0, strripos($fullpath, "."));
-			return view($fullpath, ['menuSlug' => $menuSlug, 'path' => $path, 'language' => $language])->render();
+			$menu          = $this->first('menu_slug', $menuSlug);
+			$menuItems     = $this->getMenuItems($menuSlug, $language);
+			$themeName     = \CMS::CoreModules()->getActiveTheme()->module_key ;
+			$specifiedPath = $themeName . "::" . $path . "." . $menu->template;
+			$defaultPath   = $themeName . "::templates.menus." . $menu->template;
+			
+			if ($path && view()->exists($specifiedPath))
+			{
+				return view($specifiedPath, compact('menuItems'))->render();
+			}
+			elseif(view()->exists($defaultPath))
+			{
+				return view($defaultPath, compact('menuItems'))->render();
+			}
 		}
-		elseif (view()->exists($templatename)) 
-		{
-			$path = substr($templatename, 0, strripos($templatename, "."));
-			return view($templatename, ['menuSlug' => $menuSlug, 'path' => $path, 'language' => $language])->render();
-		}
-		else
-		{
-			$path = substr($defaultPath, 0, strripos($defaultPath, "."));
-			return view($defaultPath, ['menuSlug' => $menuSlug, 'path' => $path, 'language' => $language])->render();
-		}
+		return '';
 	}
 
 	/**

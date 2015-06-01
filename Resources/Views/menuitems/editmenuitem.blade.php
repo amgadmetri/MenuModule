@@ -34,11 +34,11 @@
               <label for="menu_id">Menu:</label>
               <select name='menu_id' class="form-control">
                 @foreach($menus as $menu)
-                <option value="{{ $menu->id }}">{{ $menu->title }}</option>
+                  <option value="{{ $menu->id }}">{{ $menu->title }}</option>
                 @endforeach
               </select>
             </div>
-
+            
             <div class="form-group">
               <label for="title">Title:</label>
               <input 
@@ -52,8 +52,7 @@
             </div>
 
             <div class="form-group">
-              <label for="link">Link:</label>
-
+              <label for="link">Link: <i>If you want to "#" it leave it blank </i></label>
               <div class="input-group">
                 <span class="input-group-addon">@</span>
                 <input 
@@ -61,10 +60,10 @@
                 class            ="form-control" 
                 name             ="link"
                 @if ($menuitem->link ==='#')
-                value           ="{{''}}" 
+                  value="" 
                 @else
-                value           ="{{ $menuitem->link }}"
-                @endif  
+                  value="{{ $menuitem->link }}"
+                @endif
                 placeholder      ="Add Link here or choos from below .." 
                 aria-describedby ="sizing-addon2"
                 id               ="link" 
@@ -87,17 +86,17 @@
               <select name='parent_id' class="form-control">
                 <option value="0">Menu item root</option>
                 @foreach($menuItems as $menuItem)
-                @if($menuitem->id == $menuItem->id)
-                <option disabled value="{{ $menuItem->id }}">{{ $menuItem->title }}</option>
-                @else 
-                <option 
-                @if($menuitem->parent_id === $menuItem->id)
-                selected 
-                @endif 
-                value="{{ $menuItem->id }}">
-                {{ $menuItem->title }}
-              </option>
-              @endif
+                  @if($menuitem->id == $menuItem->id)
+                    <option disabled value="{{ $menuItem->id }}">{{ $menuItem->title }}</option>
+                  @else 
+                    <option 
+                    @if($menuitem->parent_id === $menuItem->id)
+                      selected 
+                    @endif 
+                    value="{{ $menuItem->id }}">
+                    {{ $menuItem->title }}
+                    </option>
+                  @endif
               @endforeach
             </select>
           </div>

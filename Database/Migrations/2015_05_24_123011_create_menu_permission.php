@@ -14,13 +14,26 @@ class CreateMenuPermission extends Migration
 	{
 		foreach (\CMS::coreModuleParts()->getModuleParts('menus') as $modulePart) 
 		{
-			\CMS::permissions()->insertDefaultItemPermissions(
+			if ($modulePart->part_key == 'Menus') 
+			{
+				\CMS::permissions()->insertDefaultItemPermissions(
 				                 $modulePart->part_key, 
 				                 $modulePart->id, 
 				                 [
-					                 'admin'   => ['show', 'add', 'edit', 'delete'],
-					                 'manager' => ['show', 'edit']
+					                 'admin'   => ['show', 'change-status'],
+					                 'manager' => ['show', 'change-status']
 				                 ]);
+			}
+			else
+			{
+				\CMS::permissions()->insertDefaultItemPermissions(
+					                 $modulePart->part_key, 
+					                 $modulePart->id, 
+					                 [
+						                 'admin'   => ['show', 'add', 'edit', 'delete'],
+						                 'manager' => ['show', 'edit']
+					                 ]);
+			}
 		} 
 	}
 

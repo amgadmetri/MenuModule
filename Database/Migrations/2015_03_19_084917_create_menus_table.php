@@ -20,6 +20,8 @@ class CreateMenusTable extends Migration
 				$table->string('menu_slug', 150)->unique()->index();	
 				$table->string('description', 255)->index();
 				$table->boolean('is_active')->default(1);
+				$table->string('template', 255)->index();
+				$table->string('theme', 255)->index();
 				$table->timestamps();
 			});
 

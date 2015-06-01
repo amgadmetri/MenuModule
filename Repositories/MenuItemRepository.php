@@ -21,9 +21,23 @@ class MenuItemRepository extends AbstractRepository
 	 */
 	protected function getRelations()
 	{
-		return ['menu', 'childes'];
+		return ['menu', 'children'];
 	}
 	
+	/**
+	 * Return a specified menu item wit translations.
+	 * 
+	 * @param  integer $id
+	 * @return object
+	 */
+	public function getMenuItem($id, $language = false)
+	{
+		$menuItem        =  $this->find($id);
+		$menuItem->title = \CMS::languageContents()->getTranslations($menuItem->id, 'menu_item', $language, 'title');
+
+		return $menuItem;
+	}
+
 	/**
 	 * Store the Menu Item and it's translations in to the storage.
 	 * 
@@ -33,7 +47,7 @@ class MenuItemRepository extends AbstractRepository
 	public function createMenuItem($data)
 	{	
 		$menuItem = $this->create($data);
-		\CMS::languageContents()->insertLanguageContent(['title' => $data['title']], 'menu', $menuItem->id);
+		\CMS::languageContents()->insertLanguageContent(['title' => $data['title']], 'menu_item', $menuItem->id);
 		
 		return $menuItem;
 	}
@@ -47,7 +61,7 @@ class MenuItemRepository extends AbstractRepository
 	public function updateMenuItem($id, $data)
 	{	
 		$this->update($id, $data);
-		\CMS::languageContents()->insertLanguageContent(['title' => $data['title']], 'menu', $menuItem->id);
+		\CMS::languageContents()->insertLanguageContent(['title' => $data['title']], 'menu_item', $id);
 
 		return $this->find($id);
 	}
@@ -75,5 +89,4 @@ class MenuItemRepository extends AbstractRepository
 	{
 		$this->update($id, ['status' => 'unpublished']);
 	}
-
 }

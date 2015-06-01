@@ -25,13 +25,11 @@
 
     <div class="container">
       <div class="col-sm-9">
-        <a class="btn btn-default" href="{{ url('admin/menus/create') }}" role="button">Add new menu</a>
         <table class="table table-striped">
           <thead>
             <tr>
               <th>#</th>
               <th>Title</th>
-              <th>is_Active</th>
               <th>Description</th>
               <th>Options</th>
             </tr>
@@ -41,18 +39,10 @@
             <tr>
               <th scope="row">{{$menu->id}}</th>
               <td>{{$menu->title}}</td>
-              <td>{{$menu->is_active}}</td>
               <td>{{$menu->description}}</td>
               <td>
-                @if(\CMS::permissions()->can('edit', 'Menus'))
-                  <a class="btn btn-default" href='{{ url("admin/menus/edit/$menu->id") }}' role="button">Edit</a>
-                @endif
 
-                @if(\CMS::permissions()->can('delete', 'Menus'))
-                  <a class="btn btn-default" href='{{ url("admin/menus/delete/$menu->id") }}' role="button">Delete</a>
-                @endif
-
-                @if(\CMS::permissions()->can('edit', 'Menus'))
+                @if(\CMS::permissions()->can('change-status', 'Menus'))
                   @if($menu->is_active == 0)
                     <a class="btn btn-default" href='{{ url("admin/menus/activate/$menu->id") }}' role="button">Activate</a>
                   @else

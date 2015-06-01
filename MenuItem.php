@@ -17,7 +17,7 @@ class MenuItem extends Model {
 	 * @var fillable
 	 */
 	protected $fillable = ['menu_id', 'link', 'status', 'parent_id', 'target', 'display_order', 'user_id', 'css_class', 'css_attributes'];
-	
+
 	/**
 	 * Get the menuItem menu.
 	 * 
@@ -29,11 +29,11 @@ class MenuItem extends Model {
 	}
 
 	/**
-	 * Get the menuItem childs.
+	 * Get the menuItem children.
 	 * 
 	 * @return collection
 	 */
-	public function childes()
+	public function children()
 	{
 		return $this->hasMany('App\Modules\Menus\MenuItem', 'parent_id');
 	}
@@ -43,13 +43,13 @@ class MenuItem extends Model {
 		parent::boot();
 
 		/**
-		 * Remove the childes and translations
+		 * Remove the children and translations
 		 * related to the deleted menuItems.
 		 */
 		MenuItem::deleting(function($menuItem)
 		{
-			$menuItem->childes()->delete();
-			\CMS::languageContents()->deleteItemLanguageContents('menu', $menuItem->id);
+			$menuItem->children()->delete();
+			\CMS::languageContents()->deleteItemLanguageContents('menu_item', $menuItem->id);
 		});
 	}
 }

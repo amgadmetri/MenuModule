@@ -32,7 +32,7 @@ class MenuItemController extends BaseController {
  	 */
 	public function getShow($menuSlug)
 	{	
-		$menuItems = \CMS::menus()->getMenuItems($menuSlug, 'en');
+		$menuItems = \CMS::menus()->getMenuItems($menuSlug, 'all', 'en');
 		return view('menus::menuitems.menuitems', compact('menuItems', 'menuSlug'));
 	}
 
@@ -44,11 +44,12 @@ class MenuItemController extends BaseController {
 	 */
 	public function getCreate($menuSlug)
 	{
-		$links     = \CMS::menu()->getLinks($menuSlug);
-		$menuItems = \CMS::menu()->getMenuItems($menuSlug, 'en');
-		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
+		$links           = \CMS::menu()->getLinks($menuSlug);
+		$menuItems       = \CMS::menu()->getMenuItems($menuSlug, 'en');
+		$menus           = \CMS::menu()->findBy('menu_slug', $menuSlug);
+		$maxDisplayOrder = \CMS::menuItems()->model->max('display_order');
 
-		return view('menus::menuitems.createmenuitems', compact('menus', 'menuItems', 'links'));
+		return view('menus::menuitems.createmenuitems', compact('menus', 'menuItems', 'links', 'maxDisplayOrder'));
 	}
 
 	/**
@@ -61,6 +62,7 @@ class MenuItemController extends BaseController {
 	{
 		$data['user_id'] = \Auth::user()->id;
 		$data['link']    = strlen(trim($request->link)) ? $request->link : "#";
+		$data['link']    = realpath($data['link']) && $data['link'] !== '/' ? $data['link'] : url($data['link']);
 		\CMS::menuItems()->createMenuItem(array_merge($request->except('user_id', 'link'), $data));
 
 		return redirect()->back()->with('message', 'Menu Item successfully created');
@@ -75,10 +77,10 @@ class MenuItemController extends BaseController {
 	 */
 	public function getEdit($id, $menuSlug)
 	{
-		$links     = \CMS::menu()->getLinks();
+		$links     = \CMS::menu()->getLinks($menuSlug);
 		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
 		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
-		$menuitem  = \CMS::menuItems()->find($id);
+		$menuitem  = \CMS::menuItems()->getMenuItem($id);
 
 		return view('menus::menuitems.editmenuitem', compact('menuitem', 'menus', 'menuItems', 'links'));
 	}
@@ -92,8 +94,9 @@ class MenuItemController extends BaseController {
 	 */
 	public function postEdit(MenuItemFormRequest $request, $id)
 	{
-		$data['link']    = strlen(trim($request->link)) ? $request->link : "#";		
-		\CMS::menuItems()->update($id, array_merge($request->except('link'), $data));
+		$data['link']    = strlen(trim($request->link)) ? $request->link : "#";	
+		$data['link']    = realpath($data['link']) && $data['link'] !== '/' ? $data['link'] : url($data['link']);
+		\CMS::menuItems()->updateMenuItem($id, array_merge($request->except('link'), $data));
 
 		return redirect()->back()->with('message', 'Menu Item successfully updated');
 	}

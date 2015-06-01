@@ -34,7 +34,7 @@
               <label for="menu_id">Menu:</label>
               <select name='menu_id' class="form-control">
                 @foreach($menus as $menu)
-                <option value="{{ $menu->id }}">{{ $menu->title }}</option>
+                  <option value="{{ $menu->id }}">{{ $menu->title }}</option>
                 @endforeach
               </select>
             </div>
@@ -67,12 +67,13 @@
               </div>
             </div>
 
-            @include('menus::parts.linkgenerator')
+            @include('menus::parts.linksgenerator')
+
             <div class="form-group">
               <label for="status">Published:</label>
               <select name="status" class="form-control">
-                <option value ="published">published</option>
-                <option value ="unpublished">unpublished</option>
+                <option @if(old('status') === "published") selected @endif value ="published">published</option>
+                <option @if(old('status') === "unpublished") selected @endif value ="unpublished">unpublished</option>
               </select>
             </div>
 
@@ -81,7 +82,7 @@
               <select name='parent_id' class="form-control">
                 <option value ="0">Menu item root</option>
                 @foreach($menuItems as $menuItem)
-                <option value ="{{ $menuItem->id }}">{{ $menuItem->title }}</option>
+                  <option @if(old('parent_id') === $menuItem->id) selected @endif value ="{{ $menuItem->id }}">{{ $menuItem->title }}</option>
                 @endforeach
               </select>
             </div>
@@ -89,10 +90,10 @@
             <div class="form-group">
               <label for="target">Target:</label>
               <select name="target" class="form-control">
-                <option value="_parent">_parent</option>
-                <option value="_blank">_blank</option>
-                <option value="_top">_top</option>
-                <option value="_self">_self</option>
+                <option @if(old('target') === "_parent") selected @endif value="_parent">_parent</option>
+                <option @if(old('target') === "_blank") selected @endif value="_blank">_blank</option>
+                <option @if(old('target') === "_top") selected @endif value="_top">_top</option>
+                <option @if(old('target') === "_self") selected @endif value="_self">_self</option>
               </select> 
             </div>
 
@@ -102,7 +103,7 @@
               type             ="text" 
               class            ="form-control" 
               name             ="display_order" 
-              value            ="{{ old('display_order') }}" 
+              value            ="{{ $maxDisplayOrder + 1 }}" 
               placeholder      ="Add display_order here .." 
               aria-describedby ="sizing-addon2"
               >

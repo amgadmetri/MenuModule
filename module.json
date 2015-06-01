@@ -6,5 +6,6 @@
 	"repo_link": "https:\/\/github.com\/amgadmetri\/MenuModule.git",
 	"type" : "plugin",
 	"enabled": true,
-	"module_parts": ["Menus", "MenuItems"]
+	"module_parts": ["Menus", "MenuItems"],
+    "order" : 4
 }

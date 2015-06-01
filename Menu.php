@@ -16,7 +16,7 @@ class Menu extends Model {
 	 * 
 	 * @var fillable
 	 */
-	protected $fillable = ['title', 'menu_slug', 'description', 'is_active'];
+	protected $fillable = ['title', 'menu_slug', 'description', 'is_active', 'template', 'theme'];
 
 	/**
 	 * Get the menu menuItems.
