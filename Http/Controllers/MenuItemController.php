@@ -45,9 +45,9 @@ class MenuItemController extends BaseController {
 	public function getCreate($menuSlug)
 	{
 		$links           = \CMS::menu()->getLinks($menuSlug);
-		$menuItems       = \CMS::menu()->getMenuItems($menuSlug, 'en');
+		$menuItems       = \CMS::menu()->getMenuItems($menuSlug);
 		$menus           = \CMS::menu()->findBy('menu_slug', $menuSlug);
-		$maxDisplayOrder = \CMS::menuItems()->model->max('display_order');
+		$maxDisplayOrder = $menuItems->max('display_order');;
 
 		return view('menus::menuitems.createmenuitems', compact('menus', 'menuItems', 'links', 'maxDisplayOrder'));
 	}

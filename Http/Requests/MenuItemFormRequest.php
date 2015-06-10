@@ -26,7 +26,7 @@ class MenuItemFormRequest extends FormRequest
 		return [
 			'menu_id'       => 'required',
 			'title'         => 'required|max:150',
-			'link'          => 'url|max:150',
+			'link'          => 'max:150',
 			'status'        => 'required',
 			'parent_id'     => 'required',
 			'target'        => 'required',

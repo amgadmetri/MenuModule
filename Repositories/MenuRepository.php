@@ -152,7 +152,7 @@ class MenuRepository extends AbstractRepository
 		if ($this->checkMenu($menuSlug))
 		{
 			$menu          = $this->first('menu_slug', $menuSlug);
-			$menuItems     = $this->getMenuItems($menuSlug, $language);
+			$menuItems     = $this->getMenuItems($menuSlug, 'published', $language);
 			$themeName     = \CMS::CoreModules()->getActiveTheme()->module_key ;
 			$specifiedPath = $themeName . "::" . $path . "." . $menu->template;
 			$defaultPath   = $themeName . "::templates.menus." . $menu->template;
