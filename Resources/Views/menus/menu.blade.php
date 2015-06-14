@@ -36,25 +36,25 @@
           </thead>
           <tbody>
             @foreach ($menus as $menu)
-            <tr>
-              <th scope="row">{{$menu->id}}</th>
-              <td>{{$menu->title}}</td>
-              <td>{{$menu->description}}</td>
-              <td>
+              <tr>
+                <th scope="row">{{$menu->id}}</th>
+                <td>{{$menu->title}}</td>
+                <td>{{$menu->description}}</td>
+                <td>
 
-                @if(\CMS::permissions()->can('change-status', 'Menus'))
-                  @if($menu->is_active == 0)
-                    <a class="btn btn-default" href='{{ url("admin/menus/activate/$menu->id") }}' role="button">Activate</a>
-                  @else
-                    <a class="btn btn-default active" href='{{ url("admin/menus/deactivate/$menu->id") }}'  role="button">Deactivate</a>
+                  @if(\CMS::permissions()->can('change-status', 'Menus'))
+                    @if($menu->is_active == 0)
+                      <a class="btn btn-default" href='{{ url("admin/menus/activate/$menu->id") }}' role="button">Activate</a>
+                    @else
+                      <a class="btn btn-default active" href='{{ url("admin/menus/deactivate/$menu->id") }}'  role="button">Deactivate</a>
+                    @endif
                   @endif
-                @endif
 
-                @if(\CMS::permissions()->can('show', 'MenuItems'))
-                  <a class="btn btn-default" href='{{ url("admin/menus/menuitem/show/$menu->menu_slug") }}' role="button">Menu items</a>
-                @endif
-              </td>
-            </tr>
+                  @if(\CMS::permissions()->can('show', 'MenuItems'))
+                    <a class="btn btn-default" href='{{ url("admin/menus/menuitem/show/$menu->menu_slug") }}' role="button">Menu items</a>
+                  @endif
+                </td>
+              </tr>
             @endforeach
           </tbody>
         </table>

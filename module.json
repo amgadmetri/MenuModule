@@ -7,5 +7,5 @@
 	"type" : "plugin",
 	"enabled": true,
 	"module_parts": ["Menus", "MenuItems"],
-    "order" : 4
+    "order" : 5
 }

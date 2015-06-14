@@ -10,9 +10,10 @@
       <li class="previous">
         <a 
         href  = "{{ $modulePartMenuItem['data']->previousPageUrl() }}" 
-        class = "linkDataPrevious"
         @if($modulePartMenuItem['data']->previousPageUrl() == null)
-          class="btn disabled" role="button"
+          class="linkDataPrevious btn disabled" role="button"
+        @else
+          class="linkDataPrevious"
         @endif
         >
         <span aria-hidden="true">&larr;</span> Previous
@@ -37,9 +38,10 @@
       <li class="next">
         <a 
         href  = "{{ $modulePartMenuItem['data']->nextPageUrl() }}" 
-        class = "linkDataNext"
         @if($modulePartMenuItem['data']->nextPageUrl() == null)
-          class="btn disabled" role="button"
+          class="linkDataNext btn disabled" role="button"
+        @else
+          class="linkDataNext"
         @endif
         >
         Next <span aria-hidden="true">&rarr;</span>
