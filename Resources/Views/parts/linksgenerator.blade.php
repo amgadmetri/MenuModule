@@ -23,39 +23,12 @@
                   </div>
                   <div id="{{ $modulePart }}" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading{{ $modulePart }}">
                     <div class="panel-body">
+                      <p>All {{ $modulePart }} : </p>
                       <div class="list-group">
-                        <a href="{{ $modulePartMenuItem['all_link'] }}" class="selectlink list-group-item">
-                          All {{ $modulePart }}
-                        </a>
-                        <a href="{{ $modulePartMenuItem['add_link'] }}" class="selectlink list-group-item">
-                          Add {{ str_singular($modulePart) }}
-                        </a>
-                        <div class="panel-group" id="accordion3" role="tablist" aria-multiselectable="true">
-                          <div class="panel panel-default">
-
-                            <div class="panel-heading" role="tab" id="headingOne">
-                              <h4 class="panel-title">
-                                <a data-toggle="collapse" data-parent="#accordion3" href="#{{ $modulePart }}_data" aria-expanded="true" aria-controls="{{ $modulePart }}_data">
-                                  {{ $modulePart }}
-                                </a>
-                              </h4>
-                            </div>
-
-                            <div id="{{ $modulePart }}_data" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingOne">
-                              <div class="panel-body">
-                                <p>All {{ $modulePart }} : </p>
-                                <div class="list-group">
-
-                                  <div class="link_data_content">
-                                    @include('menus::parts.linkdata')
-                                  </div>
-                                  
-                                </div>
-                              </div>
-                            </div>
-                          </div>
+                        <div class="link_data_content">
+                          @include('menus::parts.linkdata')
                         </div>
-                      </div>                                
+                      </div>                     
                     </div>
                   </div>
                 </div>

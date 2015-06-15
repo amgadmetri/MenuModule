@@ -114,8 +114,6 @@ class MenuRepository extends AbstractRepository
 								[
 								'data'      => $data, 
 								'base_link' => url('/' . strtolower(str_singular($value->link_name))),
-								'all_link'  => url('/' . strtolower(str_singular($value->link_name)) . 's'),
-								'add_link'  => url('/add' . strtolower(str_singular($value->link_name)))
 								];
 							}
 						}
@@ -124,13 +122,24 @@ class MenuRepository extends AbstractRepository
 					{
 						$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->paginate(1);
 						$data->setPath(url('admin/menus/menuitem/paginate', [$menuSlug, $menuItem]));
-						$links[$module['name']][$menuItem] =
-						[
-						'data'      => $data, 
-						'base_link' => url('/' . strtolower(str_singular($menuItem))),
-						'all_link'  => url('/' . strtolower(str_singular($menuItem)) . 's'),
-						'add_link'  => url('/add' . strtolower(str_singular($menuItem)))
-						];
+						if ($menuItem == 'Page') 
+						{
+							$links[$module['name']][$menuItem] =
+							[
+							'menuItem'  => $menuItem, 
+							'data'      => $data, 
+							'base_link' => url('/')
+							];
+						}
+						else
+						{
+							$links[$module['name']][$menuItem] =
+							[
+							'menuItem'  => $menuItem, 
+							'data'      => $data, 
+							'base_link' => url('/' . strtolower(str_singular($menuItem)))
+							];
+						}
 					}
 				}
 			}

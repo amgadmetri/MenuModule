@@ -1,7 +1,13 @@
 @foreach($modulePartMenuItem['data'] as $data)
-  <a href="{{ $modulePartMenuItem['base_link'] . '/' . $data->id }}" class="selectlink list-group-item">
-    {{ $data->link_name }}
-  </a>
+  @if($modulePartMenuItem['menuItem'] == 'Page')
+    <a href="{{ $modulePartMenuItem['base_link'] . '/' . $data->page_slug }}" class="selectlink list-group-item">
+      {{ $data->link_name }}
+    </a>
+  @else
+    <a href="{{ $modulePartMenuItem['base_link'] . '/' . $data->id }}" class="selectlink list-group-item">
+      {{ $data->link_name }}
+    </a>
+  @endif
 @endforeach
 
 @if($modulePartMenuItem['data'] instanceof \Illuminate\Pagination\LengthAwarePaginator)
