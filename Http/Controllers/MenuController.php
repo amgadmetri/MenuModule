@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Menus\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
+use App\Modules\Core\Http\Controllers\BaseController;
 
 class MenuController extends BaseController {
 

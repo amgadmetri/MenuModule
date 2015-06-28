@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Menus\Repositories;
 
-use App\AbstractRepositories\AbstractRepository;
+use App\Modules\Core\AbstractRepositories\AbstractRepository;
 
 class MenuItemRepository extends AbstractRepository
 {

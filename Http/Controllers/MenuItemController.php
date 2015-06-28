@@ -1,6 +1,6 @@
 <?php namespace App\Modules\Menus\Http\Controllers;
 
-use App\Http\Controllers\BaseController;
+use App\Modules\Core\Http\Controllers\BaseController;
 use App\Modules\Menus\Http\Requests\MenuItemFormRequest;
 
 class MenuItemController extends BaseController {
