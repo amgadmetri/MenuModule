@@ -44,7 +44,7 @@ class MenuItemController extends BaseController {
 	 */
 	public function getCreate($menuSlug)
 	{
-		$links           = \CMS::menu()->getLinks($menuSlug);
+		$links           = \CMS::menu()->getLinks();
 		$menuItems       = \CMS::menu()->getMenuItems($menuSlug);
 		$menus           = \CMS::menu()->findBy('menu_slug', $menuSlug);
 		$maxDisplayOrder = $menuItems->max('display_order');;
@@ -77,7 +77,7 @@ class MenuItemController extends BaseController {
 	 */
 	public function getEdit($id, $menuSlug)
 	{
-		$links     = \CMS::menu()->getLinks($menuSlug);
+		$links     = \CMS::menu()->getLinks();
 		$menuItems = \CMS::menu()->getMenuItems($menuSlug);
 		$menus     = \CMS::menu()->findBy('menu_slug', $menuSlug);
 		$menuitem  = \CMS::menuItems()->getMenuItem($id);
@@ -141,14 +141,13 @@ class MenuItemController extends BaseController {
 	 * Handle the pagination request for the
 	 * link data.
 	 * 
-	 * @param  string $menuSlug
 	 * @param  string $partMenuItemName The name of the
 	 *                                  paginated link data.
 	 * @return string
 	 */
-	public function getPaginate($menuSlug, $partMenuItemName)
+	public function getPaginate($partMenuItemName)
 	{
-		$links = \CMS::menu()->getLinks($menuSlug);
+		$links = \CMS::menu()->getLinks();
 		foreach ($links as $key => $value) 
 		{	
 			/**

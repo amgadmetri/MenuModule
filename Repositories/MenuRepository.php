@@ -83,10 +83,9 @@ class MenuRepository extends AbstractRepository
 	 * Return links to all modules specified menu items
 	 * at the module.json file.
 	 * 
-	 * @param  string $menuSlug
 	 * @return array 
 	 */
-	public function getLinks($menuSlug)
+	public function getLinks()
 	{
 		$links = array();
 		foreach (\Module::all() as $module) 
@@ -108,20 +107,21 @@ class MenuRepository extends AbstractRepository
 						{
 							if (method_exists(\CMS::$baseType(), 'getAll'))
 							{
-								$data                                      = ! \CMS::$baseType() ? [] : \CMS::$baseType()->getAll($value->link_name, 1);
-								$data->setPath(url('admin/menus/menuitem/paginate', [$menuSlug, $value->link_name]));
-								$links[$module['name']][$value->link_name] =
+								$data = ! \CMS::$baseType() ? [] : \CMS::$baseType()->getAll($value->link_name, 5);
+								$data->setPath(url('admin/menus/menuitem/paginate', [$value->link_name]));
+								$links[$module['name']][studly_case($value->link_name)] =
 								[
+								'menuItem'  => current($menuItem), 
 								'data'      => $data, 
-								'base_link' => url('/' . strtolower(str_singular($value->link_name))),
+								'base_link' => url('/' . strtolower(str_singular(current($menuItem))) . '/' .strtolower(snake_case(str_replace (" ", "", $value->link_name)))),
 								];
 							}
 						}
 					}
 					else
 					{
-						$data                              = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->paginate(1);
-						$data->setPath(url('admin/menus/menuitem/paginate', [$menuSlug, $menuItem]));
+						$data = ! \CMS::$menuItem() ? [] : \CMS::$menuItem()->paginate(5);
+						$data->setPath(url('admin/menus/menuitem/paginate', [$menuItem]));
 						if ($menuItem == 'Page') 
 						{
 							$links[$module['name']][$menuItem] =

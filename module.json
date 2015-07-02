@@ -3,7 +3,7 @@
 	"slug": "menus",
 	"version": "1.0",
 	"description": "This is the description for the Menus module.",
-	"repo_link": "https:\/\/github.com\/amgadmetri\/MenuModule.git",
+	"repo_link": "https://github.com/amgadmetri/MenuModule.git",
 	"type" : "plugin",
 	"enabled": true,
 	"module_parts": ["Menus", "MenuItems"],

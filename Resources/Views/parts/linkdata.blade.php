@@ -1,5 +1,5 @@
 @foreach($modulePartMenuItem['data'] as $data)
-  @if($modulePartMenuItem['menuItem'] == 'Page')
+  @if($modulePartMenuItem['menuItem'] === 'Page')
     <a href="{{ $modulePartMenuItem['base_link'] . '/' . $data->page_slug }}" class="selectlink list-group-item">
       {{ $data->link_name }}
     </a>

@@ -71,7 +71,7 @@
               </div>
             </div>
 
-            @include('menus::parts.linkgenerator')
+            @include('menus::parts.linksgenerator')
 
             <div class="form-group">
               <label for="status">Published:</label>
